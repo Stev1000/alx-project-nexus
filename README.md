@@ -134,19 +134,27 @@ Use the first week to share which project you’re working on.
 Connect with frontend learners building the frontend for this backend.
 
 📂 Initial Project Structure
-alx-project-nexus/
-│── README.md
-│── requirements.txt
-│── manage.py
-│── ecommerce_backend/
-│── products/
-│── users/
 
-⚡ Setup Instructions
+alx-project-nexus/
+
+│── README.md
+
+│── requirements.txt
+
+│── manage.py
+
+│── ecommerce_backend
+
+│── products
+
+│── users
+
+ Setup Instructions
 
 ## Clone the repo
 
 git clone <https://github.com/stevo1000/alx-project-nexus.git>
+
 cd alx-project-nexus
 
 ## Create virtual environment
