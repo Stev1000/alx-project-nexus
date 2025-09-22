@@ -1,97 +1,219 @@
-# Project Nexus Documentation
+# ALX Project Nexus: E-Commerce Backend-ProDev BE
 
-## Project Objective
+ Overview
 
-This repository, **alx-project-nexus**, serves as a documentation hub for my major learnings throughout the **ProDev Backend Engineering Program**.  
-It showcases the key technologies, backend engineering concepts, challenges faced, solutions implemented, and personal takeaways from the program.
+Project Nexus is part of the ALX ProDev Backend Engineering Program.
+It serves as both:
 
----
+A documentation hub to consolidate backend engineering learnings.
 
-## Overview of the ProDev Backend Engineering Program
+A real-world case study: building an E-Commerce Backend using Django + PostgreSQL.
 
-The ProDev Backend Engineering program provided a deep dive into modern backend development practices, industry-standard tools, and collaborative workflows.  
-The program emphasized hands-on experience, building scalable systems, and adopting best practices for production-ready applications.
+This repository is designed to showcase:
 
----
+Backend engineering concepts (REST APIs, GraphQL, Docker, CI/CD, async programming, caching).
 
-## 🛠 Key Technologies Covered
+## Challenges & solutions encountered during development
 
-- **Python** – Core programming language for backend development.  
-- **Django & Django REST Framework** – Building RESTful APIs and backend applications.  
-- **GraphQL** – Designing flexible and efficient data-fetching APIs.  
-- **Docker** – Containerization and environment consistency.  
-- **CI/CD** – Automation pipelines for integration, testing, and deployment.
+Best practices and personal insights gained throughout the program.
 
----
+Collaboration efforts with fellow frontend and backend learners.
 
-## Important Backend Development Concepts
+## Project Objectives
 
-1. **Database Design**  
-   - Normalization, relationships, and schema optimization.  
-   - Implementing models and migrations with Django ORM.  
+### Program Goals
 
-2. **Asynchronous Programming**  
-   - Using Celery for background tasks.  
-   - Understanding async views and concurrency in Python.  
+Document major backend technologies, tools, and best practices.
 
-3. **Caching Strategies**  
-   - Leveraging Redis for performance optimization.  
-   - Applying query caching and request-level caching.  
+Serve as a knowledge hub for current and future learners.
 
----
+Encourage collaboration between frontend and backend learners.
 
-## Challenges Faced and Solutions Implemented
+### Project Goals
 
-- **Challenge**: Debugging database authentication errors with PostgreSQL.  
-  - **Solution**: Corrected `pg_hba.conf` settings and properly configured environment variables in Docker.  
+Build CRUD APIs for products, categories, and users.
 
-- **Challenge**: Implementing JWT authentication with custom User models.  
-  - **Solution**: Extended Django’s `AbstractBaseUser` and updated serializers/viewsets accordingly.  
+Implement filtering, sorting, and pagination for efficient product discovery.
 
-- **Challenge**: Handling background tasks with Celery on Windows.  
-  - **Solution**: Configured `solo` pool for local development, later deployed with RabbitMQ on Docker.  
+Secure endpoints with JWT authentication.
 
----
+Document APIs with Swagger/OpenAPI.
 
-## Best Practices and Personal Takeaways
+Optimize database performance with indexing and ORM tuning.
 
-- Always use **.env files** for secrets and credentials.  
-- Follow **GitFlow** for branch management (`develop`, `feature/*`, `release/*`, `main`).  
-- Write **tests before deployment** to ensure production stability.  
-- Document code and APIs with tools like **Swagger / DRF YASG**.  
-- Collaboration is key – backend and frontend teams must align early.  
+Prepare deployment for public access.
 
----
+## Tech Stack
+
+Backend Framework: Django REST Framework (DRF)
+
+Database: PostgreSQL
+
+Authentication: JWT (djangorestframework-simplejwt)
+
+API Documentation: Swagger (drf-yasg)
+
+Containerization: Docker & Docker Compose
+
+CI/CD: GitHub Actions (pipeline setup planned)
+
+Other Concepts Covered:
+
+GraphQL APIs (planned integration)
+
+Celery & RabbitMQ (for async tasks)
+
+Caching strategies with Redis
+
+## Features (Planned & Implemented)
+
+User Authentication
+
+Register, login, and manage profiles (JWT-secured).
+
+Product & Category Management
+
+Full CRUD APIs.
+
+Product Discovery
+
+Filter by category.
+
+Sort by price.
+
+Paginate results for large datasets.
+
+API Documentation
+
+Interactive Swagger UI.
+
+Database Optimization
+
+Proper indexing and query optimization (select_related, prefetch_related).
+
+## Backend Concepts, Challenges & Best Practices
+
+Database Design: Normalized schema, foreign key constraints, indexing.
+
+Asynchronous Programming: Planned Celery tasks for notifications.
+
+Caching Strategies: Redis for frequent queries.
+
+## Challenges & Solutions
+
+Challenge: JWT token refresh and expiry handling.
+Solution: Used SimpleJWT refresh tokens with blacklist support.
+
+Challenge: Query slowness on large datasets.
+Solution: Added database indexes and used select_related.
+
+Best Practices & Takeaways:
+
+Write clean, modular code (Django apps separation).
+
+Follow 12-Factor App principles for deployment.
+
+Use Conventional Commits for clarity in version control.
 
 ## Collaboration – Key to Success
 
-### Collaborators
+Collaborate with:
 
-- **Fellow ProDev Backend Learners**: Exchanged ideas, organized coding sessions, and reviewed each other’s work.  
-- **ProDev Frontend Learners**: Worked closely since they consumed backend API endpoints for their projects.  
+Fellow ProDev Backend learners (exchange ideas, code reviews).
 
-### Collaboration Platforms
+ProDev Frontend learners (they’ll consume your API endpoints).
 
-- **Discord Channel**: `#ProDevProjectNexus`  
-  - Shared updates, asked questions, and collaborated on tasks.  
-  - Coordinated with frontend learners to ensure smooth integration.  
+Where to Collaborate:
 
----
+Dedicated Discord Channel: #ProDevProjectNexus
 
-## ProDev Tip
+ProDev Tip 💡
 
-Use the **first week** to:
+Use the first week to share which project you’re working on.
 
-- Communicate which project you are developing.  
-- Identify frontend learners building complementary projects.  
-- Align API contracts early to avoid integration issues.  
+Connect with frontend learners building the frontend for this backend.
 
----
+📂 Initial Project Structure
+alx-project-nexus/
+│── README.md
+│── requirements.txt
+│── manage.py
+│── ecommerce_backend/
+│── products/
+│── users/
 
-## Repository Information
+⚡ Setup Instructions
 
-- **Repository Name**: `alx-project-nexus`  
-- **File**: `README.md`  
-- **Purpose**: A living documentation hub that reflects continuous growth as a backend engineer.  
+## Clone the repo
 
----
+git clone <https://github.com/stevo1000/alx-project-nexus.git>
+cd alx-project-nexus
+
+## Create virtual environment
+
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+
+## Install dependencies
+
+pip install -r requirements.txt
+
+## Run migrations
+
+python manage.py migrate
+
+## Start server
+
+python manage.py runserver
+
+## Commit Guidelines
+
+This repo follows Conventional Commits:
+
+feat: → new feature
+
+fix: → bug fix
+
+docs: → documentation only
+
+perf: → performance improvement
+
+refactor: → restructuring code
+
+test: → add or update tests
+
+Example:
+
+git commit -m "feat(auth): add JWT login endpoint"
+
+✅ Next Steps
+
+Design ERD & Implement Django Models
+
+Implement JWT Authentication
+
+CRUD APIs for Products & Categories
+
+Filtering, Sorting, Pagination
+
+Swagger API Documentation
+
+Database Optimization
+
+Deployment (Heroku/Render/Railway)
+
+Presentation & Demo Video
+
+👨‍💻 Author
+
+Steven Nsanzabandi Gasasira
+
+GitHub: Stev1000
+
+LinkedIn: Steven Nsanzabandi
+
+4️⃣ First Commit
+git add README.md
+git commit -m "docs: add  README with project overview"
+git push -u origin master
