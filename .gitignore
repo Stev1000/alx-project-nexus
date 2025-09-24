@@ -1,20 +1,26 @@
-echo "
 # Python
 *.pyc
-__pycache__/
 *.pyo
 *.pyd
+__pycache__/
 *.sqlite3
 
-# Virtual env
+# Virtual Environment
 venv/
 .env
 
-# Django stuff
-/media
-/staticfiles
+# Django
+/media/
+staticfiles/
+*.log
 
-# IDE
+# Migrations (optional – keep if you want to regenerate them)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# IDEs / Editors
 .vscode/
 .idea/
-" >> .gitignore
+
+# Docker
+*.log
