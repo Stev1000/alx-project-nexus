@@ -1,17 +1,38 @@
 ---
-name: CI
+name: Django CI
 
 on:
   push:
-    branches: [master]
+    branches: ["main", "master"]
   pull_request:
-    branches: [master]
+    branches: ["main", "master"]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: nexus_db
+          POSTGRES_USER: nexus_user
+          POSTGRES_PASSWORD: nexus_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U nexus_user -d nexus_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -25,11 +46,21 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run migrations
-        run: python manage.py migrate --noinput
+        env:
+          DB_NAME: nexus_db
+          DB_USER: nexus_user
+          DB_PASSWORD: nexus_pass
+          DB_HOST: localhost
+          DB_PORT: 5432
+        run: |
+          python manage.py migrate
 
       - name: Run tests
-        run: python manage.py test
-
-      # Optional: build Docker image
-      - name: Build Docker image
-        run: docker build -t nexus-app .
+        env:
+          DB_NAME: nexus_db
+          DB_USER: nexus_user
+          DB_PASSWORD: nexus_pass
+          DB_HOST: localhost
+          DB_PORT: 5432
+        run: |
+          python manage.py test
