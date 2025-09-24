@@ -1,44 +1,25 @@
----
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
-    branches: ["main", "master"]
+    branches:
+      - "**"       # Run tests on all branches
   pull_request:
-    branches: ["main", "master"]
+    branches:
+      - master     # Run tests on PRs to master
+  workflow_dispatch: # Allow manual runs
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: nexus_db
-          POSTGRES_USER: nexus_user
-          POSTGRES_PASSWORD: nexus_pass
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U nexus_user -d nexus_db"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -46,21 +27,30 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run migrations
-        env:
-          DB_NAME: nexus_db
-          DB_USER: nexus_user
-          DB_PASSWORD: nexus_pass
-          DB_HOST: localhost
-          DB_PORT: 5432
         run: |
-          python manage.py migrate
+          python manage.py migrate --noinput
 
       - name: Run tests
-        env:
-          DB_NAME: nexus_db
-          DB_USER: nexus_user
-          DB_PASSWORD: nexus_pass
-          DB_HOST: localhost
-          DB_PORT: 5432
         run: |
           python manage.py test
+
+  docker:
+    needs: test
+    if: github.ref == 'refs/heads/master' # Only run on master branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: stevo1234/alx-project-nexus:latest
