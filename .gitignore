@@ -24,3 +24,16 @@ staticfiles/
 
 # Docker
 *.log
+*.pid
+*.seed
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Redis / RabbitMQ dump files
+dump.rdb
+
+# System files
+.DS_Store
+Thumbs.db
