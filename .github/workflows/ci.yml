@@ -3,21 +3,36 @@ name: Django CI/CD
 on:
   push:
     branches:
-      - "**"       # Run tests on all branches
-  pull_request:
-    branches:
-      - master     # Run tests on PRs to master
-  workflow_dispatch: # Allow manual runs
+      - "**"
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'
 
@@ -27,30 +42,28 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run migrations
-        run: |
-          python manage.py migrate --noinput
+        run: python manage.py migrate --noinput
 
       - name: Run tests
-        run: |
-          python manage.py test
+        run: python manage.py test
 
   docker:
     needs: test
-    if: github.ref == 'refs/heads/master' # Only run on master branch
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
           push: true
           tags: stevo1234/alx-project-nexus:latest
