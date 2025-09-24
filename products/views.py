@@ -3,7 +3,19 @@ from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
+from django.core.cache import cache
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from products.models import Product
 
+
+@api_view(['GET'])
+def cached_products(request):
+    products = cache.get("all_products")
+    if not products:
+        products = list(Product.objects.values())
+        cache.set("all_products", products, timeout=60*5)  # cache for 5 minutes
+    return Response(products)
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """
