@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   web:
     build: .
@@ -9,6 +11,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - rabbitmq
+      - redis
     env_file:
       - .env   # Load env vars for Django
 
@@ -19,6 +23,50 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # Broker port
+      - "15672:15672"  # Management dashboard
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    #ports:
+      #- "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery_worker:
+    build: .
+    command: celery -A ecommerce_backend worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - redis
+      - db
+    env_file:
+      - .env
+
+  celery_beat:
+    build: .
+    command: celery -A ecommerce_backend beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - redis
+      - db
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
   static_data:
+  redis_data:
