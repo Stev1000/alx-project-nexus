@@ -103,20 +103,20 @@ WSGI_APPLICATION = 'ecommerce_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'nexus_db'),
-        'USER': os.getenv('DB_USER', 'nexus_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'nexus_pass'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME", "nexus_db"),
+        "USER": os.getenv("DB_USER", "nexus_user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "nexus_pass"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
 
-# Override if DATABASE_URL is set (used in CI/CD or production)
-DATABASE_URL = os.getenv('DATABASE_URL')
+# If DATABASE_URL is provided (like in GitHub Actions), override default
+DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
-    DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    DATABASES["default"] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
 
 
 # Password validation
