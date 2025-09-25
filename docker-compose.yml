@@ -1,10 +1,15 @@
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "sleep 10 &&
+             python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn ecommerce_backend.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
       - static_data:/app/staticfiles
+      - media_data:/app/media
     ports:
       - "8000:8000"
     depends_on:
@@ -35,14 +40,14 @@ services:
     image: redis:7
     container_name: redis
     restart: always
-    #ports:
-      #- "6379:6379"
     volumes:
       - redis_data:/data
 
   celery_worker:
     build: .
-    command: celery -A ecommerce_backend worker -l info
+    command: >
+      sh -c "sleep 10 &&
+             celery -A ecommerce_backend worker -l info"
     volumes:
       - .:/app
     depends_on:
@@ -54,7 +59,9 @@ services:
 
   celery_beat:
     build: .
-    command: celery -A ecommerce_backend beat -l info
+    command: >
+      sh -c "sleep 10 &&
+             celery -A ecommerce_backend beat -l info"
     volumes:
       - .:/app
     depends_on:
@@ -67,4 +74,5 @@ services:
 volumes:
   postgres_data:
   static_data:
+  media_data:
   redis_data:
