@@ -9,7 +9,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    env:  # 👈 define secrets here once
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd="pg_isready -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }}"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
       DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
@@ -17,21 +32,6 @@ jobs:
       DB_HOST: localhost
       DB_PORT: 5432
       DEBUG: "false"
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: ${{ job.env.DB_USER }}
-          POSTGRES_PASSWORD: ${{ job.env.DB_PASSWORD }}
-          POSTGRES_DB: ${{ job.env.DB_NAME }}
-        ports:
-          - "5432:5432"
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -48,8 +48,13 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-django
 
+      - name: Debug env vars
+        run: |
+          echo "DB_USER=$DB_USER"
+          echo "DB_NAME=$DB_NAME"
+
       - name: Run migrations
         run: python manage.py migrate --noinput
 
       - name: Run tests
-        run: pytest -v || true
+        run: pytest -v
