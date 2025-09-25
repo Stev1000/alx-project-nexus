@@ -31,7 +31,7 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_HOST: localhost
       DB_PORT: 5432
-      DEBUG: false
+      DEBUG: "false"
 
     steps:
       - name: Checkout repository
