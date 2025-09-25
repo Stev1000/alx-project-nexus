@@ -1,8 +1,9 @@
----
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
+    branches: ["master"]
+  pull_request:
     branches: ["master"]
 
 jobs:
@@ -19,7 +20,7 @@ jobs:
         ports:
           - "5432:5432"
         options: >-
-          --health-cmd="pg_isready -U postgres"
+          --health-cmd="pg_isready -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }}"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -48,13 +49,28 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-django
 
-      - name: Debug env vars
-        run: |
-          echo "DB_USER=$DB_USER"
-          echo "DB_NAME=$DB_NAME"
-
       - name: Run migrations
         run: python manage.py migrate --noinput
 
       - name: Run tests
         run: python manage.py test
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test   # only run if tests pass
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ecommerce-backend:latest
