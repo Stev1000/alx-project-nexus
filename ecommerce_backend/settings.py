@@ -156,13 +156,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optional: uncomment if you create a local 'static' folder later
+# Only add this if you actually have custom static in project/static
+# If not, comment it out:
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Whitenoise storage backend
+# Whitenoise recommended storage backend
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
