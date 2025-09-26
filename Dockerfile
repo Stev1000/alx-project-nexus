@@ -1,42 +1,24 @@
-# ===============================
-# Use Python 3.12 slim as base
-# ===============================
+# Use Python 3.12 slim as base image
 FROM python:3.12-slim
 
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies (needed for psycopg2 and compilation)
+# Install system dependencies (needed for psycopg2 & building)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential libpq-dev gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# ===============================
-# Install Python dependencies
-# ===============================
+# Install Python dependencies first (layer caching optimization)
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-# ===============================
 # Copy project files
-# ===============================
 COPY . .
 
-# ===============================
-# Environment variables
-# ===============================
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE=ecommerce_backend.settings
-
-# ===============================
-# Collect static files at build time (safe for Render)
-# ===============================
-RUN python manage.py collectstatic --noinput || true
-
+# Expose port 8000 for Render
 EXPOSE 8000
 
-# ===============================
-# Start Gunicorn
-# ===============================
-CMD ["gunicorn", "ecommerce_backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers=3", "--threads=2", "--timeout=120"]
+# Run collectstatic, apply migrations, then start Gunicorn
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate --noinput && gunicorn ecommerce_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --threads 2"]

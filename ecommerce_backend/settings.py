@@ -156,15 +156,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optional: only keep this if you have custom static assets in /static
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# Optional: remove STATICFILES_DIRS unless you actually have a /static folder
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Whitenoise: tells Django to use compressed manifest storage
+# Whitenoise: use compressed, hashed static files storage
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
