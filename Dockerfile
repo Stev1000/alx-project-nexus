@@ -21,5 +21,6 @@ COPY . .
 EXPOSE 8000
 
 # Run collectstatic, apply migrations, then start Gunicorn
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py createsu && gunicorn ecommerce_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --threads 2"]
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py createsu || true && gunicorn ecommerce_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --threads 2"]
+
 
