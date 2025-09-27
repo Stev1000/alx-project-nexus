@@ -11,10 +11,24 @@ class Command(BaseCommand):
         password = os.getenv("DJANGO_SUPERUSER_PASSWORD", "Neza0784@123!")
 
         try:
-            if not User.objects.filter(username=username).exists():
-                User.objects.create_superuser(username=username, email=email, password=password)
+            user, created = User.objects.get_or_create(
+                username=username,
+                defaults={
+                    "email": email,
+                    "is_staff": True,
+                    "is_superuser": True,
+                },
+            )
+            # Always update user details
+            user.email = email
+            user.is_staff = True
+            user.is_superuser = True
+            user.set_password(password)   # Force reset password
+            user.save()
+
+            if created:
                 self.stdout.write(self.style.SUCCESS(f"Superuser '{username}' created"))
             else:
-                self.stdout.write(self.style.WARNING(f"Superuser '{username}' already exists"))
+                self.stdout.write(self.style.WARNING(f"Superuser '{username}' updated with new password"))
         except Exception as e:
-            self.stdout.write(self.style.ERROR(f"Failed to create superuser: {e}"))
+            self.stdout.write(self.style.ERROR(f"Failed to create/update superuser: {e}"))
