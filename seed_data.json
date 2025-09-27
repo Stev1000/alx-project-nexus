@@ -1,35 +1,20 @@
 [
   {
-    "model": "users.user",
-    "pk": 1,
-    "fields": {
-      "username": "john_doe",
-      "email": "john@example.com",
-      "password": "pbkdf2_sha256$260000$testhash$fakehashhere",
-      "is_staff": false,
-      "is_superuser": false,
-      "role": "customer",
-      "phone": "0788888888",
-      "created_at": "2025-09-24T12:00:00Z",
-      "updated_at": "2025-09-24T12:00:00Z"
-    }
-  },
-  {
-    "model": "users.user",
-    "pk": 2,
-    "fields": {
-      "username": "admin_user",
-      "email": "admin@example.com",
-      "password": "pbkdf2_sha256$260000$testhash$fakehashhere",
-      "is_staff": true,
-      "is_superuser": true,
-      "role": "admin",
-      "phone": "0799999999",
-      "created_at": "2025-09-24T12:00:00Z",
-      "updated_at": "2025-09-24T12:00:00Z"
-    }
-  },
-
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "pbkdf2_sha256$600000$5okIGm20l5Y4F0tYZyX2ZX$NUXZBdW9OVu3UdmQ+H8pXwR6On71JgVqVt+F8v5Oy5o=",
+    "is_staff": false,
+    "is_superuser": false,
+    "role": "customer",
+    "phone": "0788888888",
+    "created_at": "2025-09-24T12:00:00Z",
+    "updated_at": "2025-09-24T12:00:00Z"
+  }
+},
+  
   { "model": "products.category", "pk": 1, "fields": { "name": "Electronics", "created_at": "2025-09-24T12:00:00Z", "updated_at": "2025-09-24T12:00:00Z" }},
   { "model": "products.category", "pk": 2, "fields": { "name": "Clothing", "created_at": "2025-09-24T12:00:00Z", "updated_at": "2025-09-24T12:00:00Z" }},
   { "model": "products.category", "pk": 3, "fields": { "name": "Telephones", "created_at": "2025-09-24T12:00:00Z", "updated_at": "2025-09-24T12:00:00Z" }},
@@ -250,7 +235,7 @@
     "created_at": "2025-09-24T12:00:00Z"
   }},
   { "model": "reviews.review", "pk": 2, "fields": {
-    "user": 2,
+    "user": 1,
     "product": 2,
     "rating": 4,
     "review_text": "Great laptop but a bit pricey.",
